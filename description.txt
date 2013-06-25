@@ -1,0 +1,7 @@
+Blog has owner
+Blog has no of viewers
+Blog has many posts
+Users can follow each other
+Users can crud blogs and blog posts
+Users can add comments to posts
+Users can share posts on fb, twitter and google
