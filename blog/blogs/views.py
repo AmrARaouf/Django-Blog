@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib import auth, messages
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.http import HttpResponse
 from blogs.models import Blog, Post, Comment
@@ -16,7 +17,7 @@ def view(request, blog_name, post_id):
   comments = post.comment_set.all()
   isauth = request.user.is_authenticated()
   return render_to_response('blogs/post.html', {'post_id':post_id, 'isauth':isauth, 'blog_name':blog_name,
-   'post_title':post.title, 'post_content':post.content, 'comments':comments}, context_instance=RequestContext(request) )
+   'post_title':post.title, 'post_content':post.content, 'comments':comments}, context_instance=RequestContext(request))
 
 def comment(request, blog_name):
   usr = request.user
@@ -25,5 +26,20 @@ def comment(request, blog_name):
   c = Comment(user=usr, post=pst, content=contnt)
   c.save()
   return redirect('/' + blog_name + '/' + request.POST['post_id'] + '/')
-  #url = reverse('view', kwargs={'post_id':request.POST['post_id'], 'blog_name': blog_name})
-  #return HttpResponseRedirect(url)
+
+def home(request):
+  if request.user.is_authenticated():
+    return render_to_response('blogs/home.html')
+  else:
+    return render_to_response('blogs/homepage.html', context_instance=RequestContext(request))
+
+def login_view(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = auth.authenticate(username=username, password=password)
+    if user is not None:
+      auth.login(request, user)
+      return redirect('/index/')
+    else:
+      messages.error(request, 'Username and/or password invalid')
+      return redirect('/index/')
