@@ -1,0 +1,28 @@
+<h1><a href="/{{blog_name}}">{{blog_name}}</a>/{{post_title}}</h1>
+<p>{{post_content}}</p>
+<br>
+<br>
+<h3>Comments:</h3>
+{% if comments.length != 0 %}
+  <ul>
+    {% for comment in comments %}
+      <li>
+        <div> 
+          <p><h4>{{comment.user}}:</h4>{{comment.content}}</p>
+        </div>
+      </li> 
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>none</p>
+{% endif %}
+{% if isauth %}
+  <form method="post" action="/{{blog_name}}/blogs/comment/">
+  {% csrf_token %}
+  <input type="hidden" name="post_id" value={{post_id}}>
+  <textarea name="content" id="textarea" cols="45" rows="5"></textarea>
+  <input type="submit" value="Add Comment" />
+  </form>
+{% else %}
+  <p>you need to be signed in to add a comment</p>
+{% endif %}
