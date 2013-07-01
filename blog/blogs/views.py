@@ -29,7 +29,11 @@ def comment(request, blog_name):
 
 def home(request):
   if request.user.is_authenticated():
-    return render_to_response('blogs/home.html')
+    blog = Blog.objects.get(user=request.user)
+    if blog is not None:
+      return redirect('/' + blog.name + '/')
+    else:
+      return render_to_response('blogs/noblog.html')
   else:
     return render_to_response('blogs/homepage.html', context_instance=RequestContext(request))
 
@@ -39,7 +43,11 @@ def login_view(request):
     user = auth.authenticate(username=username, password=password)
     if user is not None:
       auth.login(request, user)
-      return redirect('/index/')
+      return redirect('/index')
     else:
       messages.error(request, 'Username and/or password invalid')
-      return redirect('/index/')
+      return redirect('/index')
+
+def logout_view(request):
+    auth.logout(request)
+    return redirect('/index')

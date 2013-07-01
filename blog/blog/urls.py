@@ -5,9 +5,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^index/', 'blogs.views.home'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/login/', 'blogs.views.login_view'),
-    url(r'^index/', 'blogs.views.home'),
     url(r'^(?P<blog_name>\w+)/$', 'blogs.views.index'),
     url(r'^(?P<blog_name>\w+)/(?P<post_id>\d+)/$', 'blogs.views.view'),
     url(r'^(?P<blog_name>\w+)/blogs/comment/$', 'blogs.views.comment'),
